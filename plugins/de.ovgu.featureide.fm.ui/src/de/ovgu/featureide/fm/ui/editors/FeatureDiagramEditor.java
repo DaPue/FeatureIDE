@@ -455,9 +455,9 @@ public class FeatureDiagramEditor extends ScrollingGraphicalViewer implements GU
 		}
 
 		NameTypeSelectionAction curNameType = null;
-		if(graphicalFeatureModel.getLayout().showShortNames()){
+		if (graphicalFeatureModel.getLayout().showShortNames()) {
 			curNameType = setNameType.get(1);
-		}else{
+		} else {
 			curNameType = setNameType.get(0);
 		}
 		curNameType.setChecked(true);
@@ -744,7 +744,8 @@ public class FeatureDiagramEditor extends ScrollingGraphicalViewer implements GU
 	}
 
 	public void setLayout() {
-		FeatureDiagramLayoutManager layoutManager = FeatureDiagramLayoutHelper.getLayoutManager(graphicalFeatureModel.getLayout().getLayoutAlgorithm(), graphicalFeatureModel);
+		FeatureDiagramLayoutManager layoutManager = FeatureDiagramLayoutHelper.getLayoutManager(graphicalFeatureModel.getLayout().getLayoutAlgorithm(),
+				graphicalFeatureModel);
 
 		int previousLayout = graphicalFeatureModel.getLayout().getLayoutAlgorithm();
 
@@ -875,6 +876,10 @@ public class FeatureDiagramEditor extends ScrollingGraphicalViewer implements GU
 			internRefresh(true);
 			featureModelEditor.setPageModified(true);
 			analyzeFeatureModel();
+			for (IGraphicalFeature gFeature : graphicalFeatureModel.getFeatures()) {
+				gFeature.getObject().fireEvent(new FeatureIDEEvent(null, EventType.ATTRIBUTE_CHANGED, Boolean.FALSE, true));
+				gFeature.update(FeatureIDEEvent.getDefault(EventType.ATTRIBUTE_CHANGED));
+			}
 			break;
 		case CONSTRAINT_ADD:
 		case CONSTRAINT_DELETE:
@@ -882,6 +887,10 @@ public class FeatureDiagramEditor extends ScrollingGraphicalViewer implements GU
 			reload();
 			featureModelEditor.setPageModified(true);
 			analyzeFeatureModel();
+			for (IGraphicalFeature gFeature : graphicalFeatureModel.getFeatures()) {
+				gFeature.getObject().fireEvent(new FeatureIDEEvent(null, EventType.ATTRIBUTE_CHANGED, Boolean.FALSE, true));
+				gFeature.update(FeatureIDEEvent.getDefault(EventType.ATTRIBUTE_CHANGED));
+			}
 			break;
 		case MODEL_DATA_LOADED:
 		case MODEL_DATA_CHANGED:
@@ -917,7 +926,7 @@ public class FeatureDiagramEditor extends ScrollingGraphicalViewer implements GU
 			analyzeFeatureModel();
 			break;
 		case MODEL_DATA_SAVED:
-			
+
 			break;
 		case MODEL_LAYOUT_CHANGED:
 			reload();

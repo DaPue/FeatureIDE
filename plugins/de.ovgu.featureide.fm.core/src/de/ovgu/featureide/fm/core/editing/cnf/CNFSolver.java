@@ -34,6 +34,7 @@ import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.ISolver;
 import org.sat4j.specs.TimeoutException;
 
+import de.ovgu.featureide.fm.core.FMCorePlugin;
 import de.ovgu.featureide.fm.core.editing.remove.DeprecatedClause;
 
 /**
@@ -119,8 +120,8 @@ public class CNFSolver implements ICNFSolver {
 
 	public CNFSolver(Collection<? extends Clause> clauses, int size) {
 		solver = createSolver(size);
-
 		try {
+			
 			for (Clause node : clauses) {
 				final int[] literals = node.getLiterals();
 				int[] clause = new int[literals.length];
@@ -129,7 +130,7 @@ public class CNFSolver implements ICNFSolver {
 				solver.addClause(new VecInt(clause));
 			}
 		} catch (ContradictionException e) {
-			throw new RuntimeException(e);
+//			throw new RuntimeException(e);
 		}
 	}
 

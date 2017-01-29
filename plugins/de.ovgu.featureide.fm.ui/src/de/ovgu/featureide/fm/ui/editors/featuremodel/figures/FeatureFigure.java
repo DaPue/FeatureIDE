@@ -49,11 +49,14 @@ import de.ovgu.featureide.fm.core.FeatureStatus;
 import de.ovgu.featureide.fm.core.base.FeatureUtils;
 import de.ovgu.featureide.fm.core.base.IFeature;
 import de.ovgu.featureide.fm.core.base.IPropertyContainer;
+import de.ovgu.featureide.fm.core.base.event.FeatureIDEEvent;
+import de.ovgu.featureide.fm.core.base.event.FeatureIDEEvent.EventType;
 import de.ovgu.featureide.fm.core.base.impl.ExtendedFeature;
 import de.ovgu.featureide.fm.core.base.impl.Feature;
 import de.ovgu.featureide.fm.core.color.ColorPalette;
 import de.ovgu.featureide.fm.core.color.FeatureColor;
 import de.ovgu.featureide.fm.core.color.FeatureColorManager;
+import de.ovgu.featureide.fm.ui.FMUIPlugin;
 import de.ovgu.featureide.fm.ui.editors.FeatureDiagramExtension;
 import de.ovgu.featureide.fm.ui.editors.IGraphicalFeature;
 import de.ovgu.featureide.fm.ui.editors.IGraphicalFeatureModel;
@@ -160,7 +163,18 @@ public class FeatureFigure extends Figure implements GUIDefaults {
 				}
 			}
 		} else {
-			if (feature.getStructure().isRoot() && !analyser.valid()) {
+			if (!analyser.valid()) {
+				if(getFeature().getObject().getStructure().isRoot())
+				{
+					for (IGraphicalFeature gFeature : getFeature().getGraphicalModel().getFeatures()) {
+						if(gFeature.getObject().getStructure().isRoot())
+						{
+							continue;
+						}
+						gFeature.getObject().fireEvent(new FeatureIDEEvent(null, EventType.ATTRIBUTE_CHANGED, Boolean.FALSE, true));
+						gFeature.update(FeatureIDEEvent.getDefault(EventType.ATTRIBUTE_CHANGED));
+					}
+				}
 				setBackgroundColor(FMPropertyManager.getDeadFeatureBackgroundColor());
 				setBorder(FMPropertyManager.getDeadFeatureBorder(this.feature.isConstraintSelected()));
 				explanation = analyser.deadFeatureExpl.get(feature); // get explanation for void feature model

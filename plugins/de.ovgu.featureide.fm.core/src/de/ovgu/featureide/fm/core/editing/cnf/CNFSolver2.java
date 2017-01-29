@@ -108,7 +108,7 @@ public class CNFSolver2 implements ICNFSolver {
 		try {
 			solver.addClause(new VecInt(unitClauses));
 		} catch (ContradictionException e) {
-			throw new RuntimeException(e);
+			//throw new RuntimeException(e);
 		}
 
 	}
